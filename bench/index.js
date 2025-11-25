@@ -6,9 +6,7 @@ import { VectorTile } from '@mapbox/vector-tile'
 import Benchmark from 'benchmark'
 import * as serialize from '../index'
 
-import { fileURLToPath } from 'url'
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
+const __dirname = import.meta.dirname;
 
 var raw = fs.readFileSync(path.join(__dirname, '../test/fixtures/rectangle-1.0.0.pbf'))
 var rawTile = new VectorTile(new Pbf(raw))
