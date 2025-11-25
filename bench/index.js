@@ -1,14 +1,18 @@
-var fs = require('fs')
-var path = require('path')
-var geojsonVt = require('geojson-vt')
-var Pbf = require('pbf')
-var VectorTile = require('@mapbox/vector-tile').VectorTile
-var Benchmark = require('benchmark')
-var serialize = require('../')
+import fs from 'fs'
+import path from 'path'
+import geojsonVt from 'geojson-vt'
+import Pbf from 'pbf'
+import { VectorTile } from '@mapbox/vector-tile'
+import Benchmark from 'benchmark'
+import * as serialize from '../index'
+
+import { fileURLToPath } from 'url'
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 var raw = fs.readFileSync(path.join(__dirname, '../test/fixtures/rectangle-1.0.0.pbf'))
 var rawTile = new VectorTile(new Pbf(raw))
-serialize(rawTile)
+serialize.fromVectorTileJs(rawTile)
 
 var properties = JSON.parse(fs.readFileSync(path.join(__dirname, 'properties.geojson')))
 var propertiesTile = geojsonVt(properties).getTile(0, 0, 0)
@@ -22,7 +26,7 @@ var pointsTile = geojsonVt(points).getTile(14, 3888, 6255)
 var suite = new Benchmark.Suite('vt-pbf')
 suite
   .add('raw', function () {
-    serialize(rawTile)
+    serialize.fromVectorTileJs(rawTile)
   })
   .add('simple', function () {
     serialize.fromGeojsonVt({ 'geojsonLayer': simpleTile })
